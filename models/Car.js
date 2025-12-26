@@ -15,7 +15,7 @@ const carSchema=new mongoose.Schema({
     pricePerDay:{type:Number, required:true},
     location:{type:String, required:true},
     description:{type:String, required:true},
-    isAvaliable:{type:Boolean, required:true},
+    isAvaliable:{type:Boolean, required:true , default:true},
   
    
 },{timestamps:true})

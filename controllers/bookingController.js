@@ -84,7 +84,7 @@ export const getOwnerBookings=async(req,res)=>{
        }
 
         const bookings=await Booking.find({owner:req.user._id}).populate('car user').select('-user.password').sort({createAt:-1})
-
+        console.log(bookings);
         res.json({success:true, bookings})
        
 

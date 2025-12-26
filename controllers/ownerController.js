@@ -8,6 +8,7 @@ import fs from 'fs'
 
 export const changeRoleToOwner=async(req,res)=>{
     try{
+        
         const{_id}=req.user;
         await User.findByIdAndUpdate(_id,  {role:"owner"})
         res.json({success:true, message:"now you can list cars"})
@@ -21,13 +22,15 @@ export const changeRoleToOwner=async(req,res)=>{
 
 //api to list car
  export const addCar=async(req,res)=>{
+    console.log(req.user);
     try{
+        
         const{_id}=req.user;
         const car=JSON.parse(req.body.carData);
         const imageFile=req.file;
 
         const fileBuffer=fs.readFileSync(imageFile.path)
-         const response=await imageKit.upload({
+         const response=await imagekit.upload({
             file:fileBuffer, 
             fileName: imageFile.originalname,
             folder:'/cars'
@@ -35,7 +38,7 @@ export const changeRoleToOwner=async(req,res)=>{
 
     
          // Basic URL without transformations
-         const optimizedImageUrl = imageKit.url({
+         const optimizedImageUrl = imagekit.url({
           path: response.filePath,
             transformation:[
                 {width:'1280'},
@@ -85,7 +88,7 @@ export const changeRoleToOwner=async(req,res)=>{
 
 
         if(car.owner.toString() !== _id.toString()){
-            return res.json({success:false, message:"Unautorized"})
+            return res.json({success:false, message:"Unauthorized"})
         }
         car.isAvaliable=!car.isAvaliable;
         await car.save()
@@ -110,14 +113,14 @@ export const changeRoleToOwner=async(req,res)=>{
 
 
         if(car.owner.toString() !== _id.toString()){
-            return res.json({success:false, message:"Unautorized"})
+            return res.json({success:false, message:"Unauthorized"})
         }
         car.owner=null;
         car.isAvaliable=false;
         await car.save()
 
 
-        res.json({success:true, message:"Car Remove"})
+        res.json({success:true, message:"Car Removed"})
 
     }
     catch(error){
@@ -141,7 +144,7 @@ export const changeRoleToOwner=async(req,res)=>{
         const monthyRevenue=bookings.slice().filter(booking=>booking.status==='confirmed').reduce((acc,booking)=> acc+booking.price,0)
         const dashboardData={
             totalCars:cars.length,
-            totalBooking: bookings.length,
+            totalBookings: bookings.length,
             pendingBookings:pendingBookings.length,
             completedBookings:completedBookings.length,
             recentBookings:bookings.slice(0,3),
